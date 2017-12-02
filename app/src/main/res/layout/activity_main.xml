@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.curtesmalteser.jsoncurrencies.MainActivity">
+
+        <include
+            android:id="@+id/localCoin"
+            layout="@layout/local_coin"
+            android:layout_width="match_parent"
+            android:layout_height="172dp" />
+
+        <include
+            android:id="@+id/listCurrencies"
+            layout="@layout/list_currencies"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/localCoin" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
