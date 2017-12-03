@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<!-- COMPLETED (2) - Create the custom view for the ViewHolder (single row
+ and add the necessary views -->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="65dp"
-        android:padding="8dp"
-        app:srcCompat="@drawable/ic_flag_of_portugal"/>
-
-    <TextView
-        android:id="@+id/tv_currency"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text= "teste"/>
+        android:background="@drawable/single_currency_background">
 
+        <ImageView
+            android:id="@+id/image_flag"
+            android:layout_width="100dp"
+            android:layout_height="65dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_flag_of_portugal" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_flag"
+            app:layout_constraintStart_toEndOf="@+id/image_flag"
+            app:layout_constraintTop_toTopOf="@+id/image_flag"
+            tools:text="tv_country" />
+
+        <TextView
+            android:id="@+id/tv_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_country"
+            app:layout_constraintStart_toEndOf="@+id/tv_country"
+            app:layout_constraintTop_toBottomOf="@+id/tv_country"
+            tools:text="tv_coin" />
+
+        <TextView
+            android:id="@+id/tv_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_coin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_coin"
+            app:layout_constraintTop_toBottomOf="@+id/tv_coin"
+            tools:text="tv_currency" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
