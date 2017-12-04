@@ -6,10 +6,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
+import com.curtesmalteser.jsoncurrencies.databinding.LocalCoinBinding;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 import com.curtesmalteser.jsoncurrencies.utilities.FixerJsonUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
@@ -33,14 +35,25 @@ public class MainActivity extends AppCompatActivity implements
     private static final int SEARCH_LOADER_ID = 22;
     private static final String TAG = "AJDB";
 
-
+    // COMPLETED - create a membr variable for CurrenciesAdapter
+    private CurrenciesAdapter mCurrenciesAdpater;
 
     private ActivityMainBinding mActivityMainBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+         // COMPLETED - create a LayoutManager (this case LinearLayoutManager)
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        // COMPLETED - assign the layoutManager to the RecyclerView
+        mActivityMainBinding.listCurrencies.recyclerviewCurrencies.setLayoutManager(layoutManager);
+
+        // COMPLETED - assign the setHasFixedSize(true) because allows optimizations on our UI
+        mActivityMainBinding.listCurrencies.recyclerviewCurrencies.setHasFixedSize(true);
 
         setData();
 
@@ -53,14 +66,13 @@ public class MainActivity extends AppCompatActivity implements
 
             getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
 
-
     }
 
     // TODO: 29/11/2017 Replace with real data
     private void setData() {
 
         mActivityMainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
-        mActivityMainBinding.localCoin.labelLocalCoin.setText("EURO");
+
         mActivityMainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
         mActivityMainBinding.localCoin.labelCurrencyDate.setText("N/A");
 
@@ -68,16 +80,17 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    // COMPLETED (2) Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
+    // COMPLETED (xxx) Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
     @Override
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
 
-            // COMPLETED (3) Cache the currencies data in a member variable and deliver it in onStartLoading.
+            // COMPLETED (xxx) Cache the currencies data in a member variable and deliver it in onStartLoading.
             ArrayList<CurrenciesModel> mModelArrayList = null;
 
             @Override
             protected void onStartLoading() {
+
                 if (mModelArrayList != null) {
                     deliverResult(mModelArrayList);
                 } else {
@@ -89,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
            
             @Override
             public ArrayList<CurrenciesModel> loadInBackground() {
-                String base = "EUR";
+                String base = "CHF";
 
                 ArrayList<CurrenciesModel> mCurrenciesModelArrayList = new ArrayList<>();
 
@@ -114,8 +127,6 @@ public class MainActivity extends AppCompatActivity implements
                     super.deliverResult(data);
                     mModelArrayList = data;
                 }
-
-            
         };
     }
 
@@ -125,12 +136,14 @@ public class MainActivity extends AppCompatActivity implements
         if ( null == data ) {
             showErrorMessage();
         } else {
+            // COMPLETED - set the data that will be passed to our adapter
+            mCurrenciesAdpater = new CurrenciesAdapter(data);
+            // COMPLETED - set the Adapter
+            mActivityMainBinding.listCurrencies
+                    .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
 
-            mActivityMainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate().toString());
-
-            for (CurrenciesModel model : data) {
-                Log.d(TAG, "onPostExecute: " + model.getBase() + " date " +model.getDate() + " coin: " + model.getCoin() + ": " + model.getCurrency());
-            }
+            mActivityMainBinding.localCoin.labelLocalCoin.setText(data.get(0).getBase());
+            mActivityMainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate());
         }
         
     }

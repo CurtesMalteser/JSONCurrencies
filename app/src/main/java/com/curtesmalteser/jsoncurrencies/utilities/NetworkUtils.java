@@ -1,6 +1,7 @@
 package com.curtesmalteser.jsoncurrencies.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +48,8 @@ public class NetworkUtils {
 
         URL url = null;
         try {
-            url = new URL(buildUri.toString());
+            url = new URL(buildUri.toString().replace("%3F", "").replace("%3D", ""));
+            Log.d("AJDB", "buildUrlLatest: " + url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
