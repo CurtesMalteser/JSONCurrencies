@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private ActivityMainBinding mActivityMainBinding;
 
-    String base = "EUR";
-
     // COMPLETED (xxx) Cache the currencies data in a member variable and deliver it in onStartLoading.
     ArrayList<CurrenciesModel> mModelArrayList = null;
 
@@ -64,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mActivityMainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
 
+        mActivityMainBinding.localCoin.spinnerSelectCoin.setSelection(0);
+
         SpinnerActivity activity = new SpinnerActivity();
 
         mActivityMainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener ( activity );
@@ -77,22 +77,22 @@ public class MainActivity extends AppCompatActivity implements
         // COMPLETED - assign the setHasFixedSize(true) because allows optimizations on our UI
         mActivityMainBinding.listCurrencies.recyclerviewCurrencies.setHasFixedSize(true);
 
-        setData();
+        //setData();
 
     }
 
     // TODO: 29/11/2017 Replace with real data
-    private void setData() {
+    private void setData(String base) {
 
         int loaderId = SEARCH_LOADER_ID;
 
         LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
 
-        Bundle bundleForLoader = null;
+        Bundle bundleForLoader = new Bundle();
 
-        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        bundleForLoader.putString("base", base);
 
-
+        getSupportLoaderManager().restartLoader(loaderId, bundleForLoader, callback).forceLoad();
 
         mActivityMainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
 
@@ -101,13 +101,10 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    // COMPLETED (xxx) Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
+    // COMPLETED Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
     @Override
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
-
-
-            String mBase = base;
 
             @Override
             protected void onStartLoading() {
@@ -124,12 +121,14 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public ArrayList<CurrenciesModel> loadInBackground() {
 
+                String argsString = args.getString("base");
 
-                Log.d(TAG, "loadInBackground: " + base);
+
+                Log.d(TAG, "loadInBackground: argsString " + argsString);
 
                 ArrayList<CurrenciesModel> mCurrenciesModelArrayList = new ArrayList<>();
 
-                URL url = NetworkUtils.buildUrlLatest(mBase);
+                URL url = NetworkUtils.buildUrlLatest(argsString);
                 try {
                     String data = NetworkUtils.getResponseFromHttpUrl(url);
                     mCurrenciesModelArrayList = FixerJsonUtils.getCurrencies(data);
@@ -186,15 +185,12 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                base = parent.getItemAtPosition(position).toString();
+                String base = parent.getItemAtPosition(position).toString();
                 Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
 
 
-                LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
-
-                if (mModelArrayList != null) {
-                    getSupportLoaderManager().restartLoader(SEARCH_LOADER_ID, null, callback).forceLoad();
-                }
+                if (mModelArrayList != null) Log.d(TAG, "mModelArrayList" + mModelArrayList.size());
+                    setData(base);
 
             }
 
