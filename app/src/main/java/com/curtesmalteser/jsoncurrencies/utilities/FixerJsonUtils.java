@@ -66,8 +66,6 @@ public class FixerJsonUtils {
 
         JSONObject baseObject = new JSONObject(resultJson);
 
-        Log.d("AJDB", "getCurrencies: " + getString(FJU_BASE, baseObject));
-
         JSONObject ratesObject = baseObject.getJSONObject(FJU_RATES);
 
         /** Makes a copy of the currencies FJU_COINS and exclude the base currency so,

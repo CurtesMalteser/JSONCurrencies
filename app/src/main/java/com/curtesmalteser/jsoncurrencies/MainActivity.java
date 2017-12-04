@@ -1,5 +1,6 @@
 package com.curtesmalteser.jsoncurrencies;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -8,6 +9,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements
         LoaderCallbacks<ArrayList<CurrenciesModel>>{
 
-     /* A constant to save and restore the URL that is being displayed */
+    /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
     /*
     * This number will uniquely identify our Loader and is chosen arbitrarily. You can change this
@@ -40,13 +44,31 @@ public class MainActivity extends AppCompatActivity implements
 
     private ActivityMainBinding mActivityMainBinding;
 
+    String base = "EUR";
+
+    // COMPLETED (xxx) Cache the currencies data in a member variable and deliver it in onStartLoading.
+    ArrayList<CurrenciesModel> mModelArrayList = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-         // COMPLETED - create a LayoutManager (this case LinearLayoutManager)
+        // Create an ArrayAdapter with the string array currencies_array
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.currencies_array, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mActivityMainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
+
+        SpinnerActivity activity = new SpinnerActivity();
+
+        mActivityMainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener ( activity );
+
+        // COMPLETED - create a LayoutManager (this case LinearLayoutManager)
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         // COMPLETED - assign the layoutManager to the RecyclerView
@@ -57,26 +79,25 @@ public class MainActivity extends AppCompatActivity implements
 
         setData();
 
-
-            int loaderId = SEARCH_LOADER_ID;
-
-            LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
-
-            Bundle bundleForLoader = null;
-
-            getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
-
     }
 
     // TODO: 29/11/2017 Replace with real data
     private void setData() {
 
+        int loaderId = SEARCH_LOADER_ID;
+
+        LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
+
+        Bundle bundleForLoader = null;
+
+        getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+
+
+
         mActivityMainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
 
         mActivityMainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
         mActivityMainBinding.localCoin.labelCurrencyDate.setText("N/A");
-
-
 
     }
 
@@ -85,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
 
-            // COMPLETED (xxx) Cache the currencies data in a member variable and deliver it in onStartLoading.
-            ArrayList<CurrenciesModel> mModelArrayList = null;
+
+            String mBase = base;
 
             @Override
             protected void onStartLoading() {
@@ -99,18 +120,20 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-           
+
             @Override
             public ArrayList<CurrenciesModel> loadInBackground() {
-                String base = "CHF";
+
+
+                Log.d(TAG, "loadInBackground: " + base);
 
                 ArrayList<CurrenciesModel> mCurrenciesModelArrayList = new ArrayList<>();
 
-                URL url = NetworkUtils.buildUrlLatest(base);
+                URL url = NetworkUtils.buildUrlLatest(mBase);
                 try {
                     String data = NetworkUtils.getResponseFromHttpUrl(url);
                     mCurrenciesModelArrayList = FixerJsonUtils.getCurrencies(data);
-                    
+
                     return mCurrenciesModelArrayList;
 
                 } catch (IOException e) {
@@ -122,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
 
-                @Override
-                public void deliverResult(ArrayList<CurrenciesModel> data) {
-                    super.deliverResult(data);
-                    mModelArrayList = data;
-                }
+            @Override
+            public void deliverResult(ArrayList<CurrenciesModel> data) {
+                super.deliverResult(data);
+                mModelArrayList = data;
+            }
         };
     }
 
@@ -142,19 +165,42 @@ public class MainActivity extends AppCompatActivity implements
             mActivityMainBinding.listCurrencies
                     .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
 
-            mActivityMainBinding.localCoin.labelLocalCoin.setText(data.get(0).getBase());
             mActivityMainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate());
         }
-        
+
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<CurrenciesModel>> loader) {
 
     }
-   
-   public void showErrorMessage() {
-       // TODO: 01/12/2017 (2) fix the error message to show something usefull
-       Toast.makeText(this, "Error loading data!", Toast.LENGTH_SHORT).show();
-   }
+
+    public void showErrorMessage() {
+        // TODO: 01/12/2017 (2) fix the error message to show something usefull
+        Toast.makeText(this, "Error loading data!", Toast.LENGTH_SHORT).show();
+    }
+
+    private class SpinnerActivity extends Activity
+            implements AdapterView.OnItemSelectedListener {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                base = parent.getItemAtPosition(position).toString();
+                Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
+
+
+                LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
+
+                if (mModelArrayList != null) {
+                    getSupportLoaderManager().restartLoader(SEARCH_LOADER_ID, null, callback).forceLoad();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }
 }
