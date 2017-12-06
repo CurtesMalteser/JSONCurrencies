@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TODO (2) - Add an menu.xml file-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- TODO (2) - Add an item and give an id to it-->
+    <item
+        android:id="@+id/action_toast"
+        android:title="@string/toast"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_test"
+        android:title="@string/test"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom"/>
+</menu>
