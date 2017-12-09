@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">JSON Currencies</string>
-    <!-- TODO (1): Add a string resource menu title -->
+
+    <string name="today_date">Today</string>
+    <string name="currency_date">Currency date:</string>
+
+    <!-- TODO (1): Add a string resoumain_menumenu title -->
     <string name="toast">Toast</string>
     <string name="test">TEST</string>
+    <string name="equal_sign">=</string>
+    <string name="one_string">1</string>
 </resources>
