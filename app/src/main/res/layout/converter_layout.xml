@@ -84,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/baseLabel"
             app:layout_constraintEnd_toStartOf="@+id/currencySign"
@@ -106,8 +107,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:text="@string/one_string"
-            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            app:layout_constraintBottom_toTopOf="@+id/etValue"
             app:layout_constraintEnd_toStartOf="@+id/equalSignLabel01" />
 
         <TextView
@@ -115,6 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/tvOneLabel"
             app:layout_constraintStart_toEndOf="@+id/equalSignLabel01"
@@ -133,11 +136,12 @@
             app:layout_constraintTop_toBottomOf="@+id/tvOneLabel" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/etValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:ems="10"
             android:hint="@string/one_string"
             android:inputType="numberDecimal"
@@ -145,13 +149,14 @@
             app:layout_constraintEnd_toStartOf="@+id/textView11" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/tvResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/textView11"
-            app:layout_constraintEnd_toStartOf="@+id/tvRate"
-            app:layout_constraintStart_toEndOf="@+id/tvRate"
+            app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
         <TextView
@@ -161,11 +166,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="@string/equal_sign"
-            app:layout_constraintBottom_toTopOf="@+id/editText2"
+            app:layout_constraintBottom_toTopOf="@+id/etValue"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+            app:layout_constraintTop_toBottomOf="@+id/etValue" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

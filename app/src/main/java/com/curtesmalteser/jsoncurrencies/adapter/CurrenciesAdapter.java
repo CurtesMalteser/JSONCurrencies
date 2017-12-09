@@ -1,8 +1,6 @@
-package com.curtesmalteser.jsoncurrencies;
+package com.curtesmalteser.jsoncurrencies.adapter;
 
-import android.content.ClipData;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.curtesmalteser.jsoncurrencies.databinding.ListSingleCurrencyBinding;
+import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 
 import java.util.ArrayList;
@@ -29,9 +27,22 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
     // COMPLETED - add and an ArrayList<CurrenciesModel> that will hold the data to poppulate the viewHolder
     private ArrayList<CurrenciesModel> mCurrenciesArrayList;
 
+    final private ListItemClickListener mOnClickListener;
+
+    // COMPLETED (1) Add an interface called ListItemClickListener
+    // COMPLETED (2) Within that interface, define a void method called onListItemClick that takes the model
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface ListItemClickListener {
+        void onListItemClick(CurrenciesModel currenciesModel);
+    }
+
     // COMPLETED - create a constructor for Currencies adapter
-    public CurrenciesAdapter(ArrayList<CurrenciesModel> currenciesModelArrayList) {
+    public CurrenciesAdapter(ArrayList<CurrenciesModel> currenciesModelArrayList,
+                             ListItemClickListener listener) {
         this.mCurrenciesArrayList = currenciesModelArrayList;
+        this.mOnClickListener = listener;
     }
 
     // COMPLETED - override onCreateViewHolder and return a viewHolder object
@@ -66,7 +77,8 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
     }
 
     // COMPLETED - Create the class CurrenciesViewHolder that extends RecyclerView.ViewHolder
-    public class CurrenciesViewHolder extends RecyclerView.ViewHolder {
+    public class CurrenciesViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
 
         // COMPLETED - Add the views member varibles
         ImageView mImgFlag;
@@ -83,6 +95,8 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
             mTvCountry = (TextView)   itemView.findViewById(R.id.tv_country);
             mTvCoin = (TextView)   itemView.findViewById(R.id.tv_coin);
             mTvCurrency = (TextView)   itemView.findViewById(R.id.tv_currency);
+
+            itemView.setOnClickListener(this);
         }
 
         // COMPLETED - Add the method bind that accepts an Integer as parameter
@@ -95,6 +109,15 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
             mTvCountry.setText(model.getCoin());
             mTvCoin.setText(model.getCoin());
             mTvCurrency.setText(String.valueOf(model.getCurrency()));
+        }
+
+        @Override
+        public void onClick(View v) {
+            int clickedPosition = getAdapterPosition();
+            // Get the object From the ArrayList based on the clickedPosition
+            CurrenciesModel currenciesModel = mCurrenciesArrayList.get(clickedPosition);
+            mOnClickListener.onListItemClick(currenciesModel);
+
         }
     }
 }

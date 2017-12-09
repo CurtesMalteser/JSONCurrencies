@@ -1,5 +1,7 @@
 package com.curtesmalteser.jsoncurrencies.model;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,9 +12,13 @@ import android.os.Parcelable;
 public class CurrenciesModel implements Parcelable{
 
     int id;
+
     private String base;
+
     private String date;
+
     private String coin;
+
     private Double currency;
 
     /**
