@@ -29,8 +29,8 @@
             android:layout_height="wrap_content"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/tvDateLabel"
-            app:layout_constraintEnd_toStartOf="@+id/tvCurrencyDate"
-            app:layout_constraintStart_toEndOf="@+id/tvCurrencyDate"
+            app:layout_constraintEnd_toStartOf="@+id/tvDateCurrency"
+            app:layout_constraintStart_toEndOf="@+id/tvDateCurrency"
             app:layout_constraintTop_toBottomOf="@+id/tvDateLabel" />
 
         <TextView
@@ -46,12 +46,11 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDateLabel" />
 
         <TextView
-            android:id="@+id/tvCurrencyDate"
+            android:id="@+id/tvDateCurrency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/tvCurrencyDateLabel"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/tvCurrencyDateLabel" />
 
