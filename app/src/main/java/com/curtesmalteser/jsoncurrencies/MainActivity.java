@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 
 // COMPLETED (1) Implement the proper LoaderCallbacks interface and the methods of that interface
 public class MainActivity extends AppCompatActivity implements
-        LoaderCallbacks<ArrayList<CurrenciesModel>>, CurrenciesAdapter.ListItemClickListener{
+        LoaderCallbacks<ArrayList<CurrenciesModel>>, CurrenciesAdapter.ListItemClickListener, AdapterView.OnItemSelectedListener{
 
     /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
@@ -69,11 +70,9 @@ public class MainActivity extends AppCompatActivity implements
 
         mainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
 
-        mainBinding.localCoin.spinnerSelectCoin.setSelection(0);
+        mainBinding.localCoin.spinnerSelectCoin.setSelection(30);
 
-        SpinnerActivity activity = new SpinnerActivity();
-
-        mainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener ( activity );
+        mainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener(this);
 
         // COMPLETED - create a LayoutManager (this case LinearLayoutManager)
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -84,7 +83,11 @@ public class MainActivity extends AppCompatActivity implements
         // COMPLETED - assign the setHasFixedSize(true) because allows optimizations on our UI
         mainBinding.listCurrencies.recyclerviewCurrencies.setHasFixedSize(true);
 
-        //setData();
+        // todo data from shared preferences
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
+
 
     }
 
@@ -95,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements
     //
     private void setData(String base) {
 
-        int loaderId = SEARCH_LOADER_ID;
-
         LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
 
         Bundle bundleForLoader = new Bundle();
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Use the code restartLoader will also make the initLoader case the Loader doesn't exist
         // So I'm saving lines of code here
-        getSupportLoaderManager().restartLoader(loaderId, bundleForLoader, callback).forceLoad();
+        getSupportLoaderManager().restartLoader(SEARCH_LOADER_ID, bundleForLoader, callback).forceLoad();
 
         mainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
 
@@ -141,8 +142,13 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public ArrayList<CurrenciesModel> loadInBackground() {
 
-                String argsString = args.getString("base");
-
+                String argsString;
+                if(args != null) {
+                    Log.d(TAG, "loadInBackground: " + "XPTO is null");
+                    argsString = args.getString("base");
+                } else {
+                    argsString = "USD";
+                }
 
                 Log.d(TAG, "loadInBackground: argsString " + argsString);
 
@@ -174,8 +180,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<ArrayList<CurrenciesModel>> loader, ArrayList<CurrenciesModel> data) {
-
-
         if ( null == data ) {
             showErrorMessage();
         } else {
@@ -186,10 +190,8 @@ public class MainActivity extends AppCompatActivity implements
                     .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
 
             mainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate());
-
-            mainBinding.progressBar.setVisibility(View.INVISIBLE);
         }
-
+        mainBinding.progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -213,25 +215,23 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    private class SpinnerActivity extends Activity
-            implements AdapterView.OnItemSelectedListener {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                String base = parent.getItemAtPosition(position).toString();
-                Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
-
-                //if (mModelArrayList != null) Log.d(TAG, "mModelArrayList" + mModelArrayList.size());
-                    setData(base);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+    // Spinner methods....
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // TODO: 10/12/2017 add shared preferences
+        String base = parent.getItemAtPosition(position).toString();
+        Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
+        //Get the value stored in shared pref
+        String sharedPrefVal = "USD";
+        if(!base.equals(sharedPrefVal)){
+            setData(base);
         }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 
     // TODO (3) - Override onCreateOtionsMenu
     @Override

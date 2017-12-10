@@ -97,6 +97,22 @@ public class FixerJsonUtils {
         return mCrrenciesModelArrayList;
     }
 
+    public static CurrenciesModel getSingleCurrency (String currency, String resultJson) throws JSONException {
+
+        JSONObject baseObject = new JSONObject(resultJson);
+
+        JSONObject ratesObject = baseObject.getJSONObject(FJU_RATES);
+
+         CurrenciesModel currenciesModel = new CurrenciesModel(
+                getString(FJU_BASE, baseObject),
+                getString(FJU_CURRENCY_DATE, baseObject),
+                currency,
+                getDouble(currency, ratesObject)
+        );
+
+        return currenciesModel;
+    }
+
     //this return all JSONObject to be parsed
     private static JSONObject getJsonObject(String tagName, JSONObject jsonObject) throws JSONException {
         return jsonObject.getJSONObject(tagName);

@@ -21,8 +21,15 @@ public class CurrenciesModel implements Parcelable{
 
     private Double currency;
 
+    public CurrenciesModel(String base, String date, String coin, Double currency) {
+        this.base = base;
+        this.date = date;
+        this.coin = coin;
+        this.currency = currency;
+    }
+
     /**
-     * Constructs a CurrenciesModel from values
+     * Constructs a CurrenciesModel to use with ArrayList
      */
     public CurrenciesModel(int id, String base, String date, String coin, Double currency) {
         this.id = id;
