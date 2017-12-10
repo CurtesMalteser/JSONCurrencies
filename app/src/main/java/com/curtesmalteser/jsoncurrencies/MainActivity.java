@@ -1,6 +1,5 @@
 package com.curtesmalteser.jsoncurrencies;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -245,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements
     // TODO (5) - override onOptionsItemSelected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO (6) - Add a switch and add an action to which case
+        // COMPLETED - Add a switch and add an action to which case
         switch (item.getItemId() ) {
 
             case R.id.action_toast :
@@ -254,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements
 
             case R.id.action_test :
                 Toast.makeText(this, "action_test", Toast.LENGTH_SHORT).show();
+                break;
+                
+            case R.id.action_settings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
 
                 default:
