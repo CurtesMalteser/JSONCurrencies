@@ -27,6 +27,7 @@ public class FixerJsonUtils {
 
     private static final String FJU_BASE = "base"; // "base"
 
+    // TODO - Replace this array with res array that is already done
     private static final String[] FJU_COINS = { "EUR",
             "AUD",
             "BGN",

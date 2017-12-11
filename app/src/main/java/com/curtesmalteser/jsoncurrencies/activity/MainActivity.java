@@ -1,4 +1,4 @@
-package com.curtesmalteser.jsoncurrencies;
+package com.curtesmalteser.jsoncurrencies.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.adapter.CurrenciesAdapter;
 import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
@@ -60,6 +61,14 @@ public class MainActivity extends AppCompatActivity implements
 
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        // Use to set the vectorDrawables color
+        mainBinding.localCoin.localCoin.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+
+        mainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
+
+        mainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
+        mainBinding.localCoin.labelCurrencyDate.setText("N/A");
+
         // Create an ArrayAdapter with the string array currencies_array
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.currencies_array, android.R.layout.simple_spinner_item);
@@ -87,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements
 
         loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
 
-
     }
 
     // TODO: 04/12/2017 Replace with real data
@@ -107,13 +115,9 @@ public class MainActivity extends AppCompatActivity implements
         // So I'm saving lines of code here
         getSupportLoaderManager().restartLoader(SEARCH_LOADER_ID, bundleForLoader, callback).forceLoad();
 
-        mainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
 
-        mainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
-        mainBinding.localCoin.labelCurrencyDate.setText("N/A");
 
-        // Use to set the vectorDrawables color
-        mainBinding.localCoin.localCoin.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+
     }
 
     // COMPLETED Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.

@@ -12,4 +12,5 @@
     <string name="test">TEST</string>
     <string name="equal_sign">=</string>
     <string name="one_string">1</string>
+    <string name="hint">0.00</string>
 </resources>

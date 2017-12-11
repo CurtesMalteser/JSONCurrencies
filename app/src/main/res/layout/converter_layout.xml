@@ -141,8 +141,9 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:ems="10"
-            android:hint="@string/one_string"
+            android:ems="8"
+            android:gravity="right"
+            android:hint="@string/hint"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView11" />
@@ -170,6 +171,19 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/etValue" />
+
+        <ImageButton
+            android:id="@+id/buttonGetResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:srcCompat="@drawable/ic_send_black_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvResult"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvResult"
+            app:layout_constraintTop_toBottomOf="@+id/tvResult" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
