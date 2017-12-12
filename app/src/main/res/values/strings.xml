@@ -4,10 +4,10 @@
     <string name="today_date">Today</string>
     <string name="currency_date">Currency date:</string>
 
-    <string name="search_pref">Search last selected currency</string>
+    <string name="search_pref">Search last selected currency (not implemented yet)</string>
     <string name="settings">Settings</string>
 
-    <!-- TODO (1): Add a string res main_menu menu title -->
+    <!-- TODO (1): Add useful strings res to main_menu menu title -->
     <string name="toast">Toast</string>
     <string name="test">TEST</string>
     <string name="equal_sign">=</string>

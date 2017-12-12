@@ -55,10 +55,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private ActivityMainBinding mainBinding;
 
-    private Context mContext;
-
-    private Toast mToast;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // COMPLETED Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
-    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
@@ -161,8 +156,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 String argsString;
 
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("base", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
                 String shared = sharedPreferences.getString("base", "EUR");
+                Log.d(TAG, "sharedPreferences: " + shared);
                 if(args != null) {
 
                     argsString = args.getString("base");
@@ -174,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 Log.d(TAG, "loadInBackground: argsString " + argsString);
 
-                ArrayList<CurrenciesModel> mCurrenciesModelArrayList = new ArrayList<>();
+                ArrayList<CurrenciesModel> mCurrenciesModelArrayList;
 
                 URL url = NetworkUtils.buildUrlLatest(argsString);
                 try {
@@ -240,15 +236,12 @@ public class MainActivity extends AppCompatActivity implements
     // Spinner methods....
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // TODO: 10/12/2017 add shared preferences
 
         SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         String base = parent.getItemAtPosition(position).toString();
 
-        Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
         //Get the value stored in shared pref
         String sharedPrefVal = sharedPreferences.getString("base", "EUR");
-        Log.d(TAG, "onItemSelected: sharedPrefVal " + sharedPrefVal);
         if(!base.equals(sharedPrefVal)){
             setData(base);
             sharedPreferences(base);
@@ -298,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void sharedPreferences(String base) {
         // SharedPreferences
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("base", base);
         editor.commit();
