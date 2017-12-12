@@ -51,10 +51,12 @@ public class ConverterActivity extends AppCompatActivity
         if (getIntent().hasExtra("currency")) {
             CurrenciesModel currenciesModel = getIntent().getParcelableExtra("currency");
 
-            converterBinding.baseConverter.tvDateCurrency.setText(currenciesModel.getDate());
 
-            converterModel.setBase(currenciesModel.getBase());
-            converterBinding.baseConverter.baseLabel.setText(converterModel.getBase());
+            converterModel.setBaseDate(currenciesModel.getDate());
+            converterBinding.baseConverter.tvDateCurrency.setText(converterModel.getBaseDate());
+
+            converterModel.setBaseCoin(currenciesModel.getBase());
+            converterBinding.baseConverter.baseLabel.setText(converterModel.getBaseCoin());
 
             converterBinding.baseConverter.currencyLabel.setText(currenciesModel.getCoin());
 
@@ -154,7 +156,7 @@ public class ConverterActivity extends AppCompatActivity
                 URL url = NetworkUtils.buildUrlLatest(base);
                 try {
                     String data = NetworkUtils.getResponseFromHttpUrl(url);
-                    CurrenciesModel currenciesModelResult = FixerJsonUtils.getSingleCurrency(converterModel.getBase(), data);
+                    CurrenciesModel currenciesModelResult = FixerJsonUtils.getSingleCurrency(converterModel.getBaseCoin(), data);
                     return currenciesModelResult;
 
                 } catch (IOException e) {

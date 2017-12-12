@@ -8,7 +8,7 @@ import android.arch.lifecycle.ViewModel;
 
 public class ConverterModel extends ViewModel {
 
-    private String base;
+    // Selected currency
     private String baseCoin;
     private String baseDate;
     private double baseInput;
@@ -23,12 +23,20 @@ public class ConverterModel extends ViewModel {
     private double reverseRate;
     private double reverseResult;
 
-    public String getBase() {
-        return base;
+    public String getBaseCoin() {
+        return baseCoin;
     }
 
-    public void setBase(String base) {
-        this.base = base;
+    public void setBaseCoin(String baseCoin) {
+        this.baseCoin = baseCoin;
+    }
+
+    public String getBaseDate() {
+        return baseDate;
+    }
+
+    public void setBaseDate(String baseDate) {
+        this.baseDate = baseDate;
     }
 
     public double getBaseInput() {

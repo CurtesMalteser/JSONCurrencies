@@ -1,7 +1,9 @@
 package com.curtesmalteser.jsoncurrencies.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -30,8 +32,10 @@ import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // COMPLETED (1) Implement the proper LoaderCallbacks interface and the methods of that interface
 public class MainActivity extends AppCompatActivity implements
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements
         mainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
         mainBinding.localCoin.labelCurrencyDate.setText("N/A");
 
+
+
         // Create an ArrayAdapter with the string array currencies_array
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.currencies_array, android.R.layout.simple_spinner_item);
@@ -78,7 +84,14 @@ public class MainActivity extends AppCompatActivity implements
 
         mainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
 
-        mainBinding.localCoin.spinnerSelectCoin.setSelection(30);
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        String index = sharedPreferences.getString("base", "EUR");
+
+        Log.d(TAG, "index: " + index);
+
+        String[] array = getResources().getStringArray(R.array.currencies_array);
+        int value = Arrays.asList(array).indexOf(index);
+        mainBinding.localCoin.spinnerSelectCoin.setSelection(value);
 
         mainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener(this);
 
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     // COMPLETED Within onCreateLoader, return a new AsyncTaskLoader<ArrayList<CurrenciesModel>>.
+    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
@@ -146,11 +160,16 @@ public class MainActivity extends AppCompatActivity implements
             public ArrayList<CurrenciesModel> loadInBackground() {
 
                 String argsString;
+
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("base", Context.MODE_PRIVATE);
+                String shared = sharedPreferences.getString("base", "EUR");
                 if(args != null) {
-                    Log.d(TAG, "loadInBackground: " + "XPTO is null");
+
                     argsString = args.getString("base");
+                    Log.d(TAG, "loadInBackground: is not null " + argsString);
                 } else {
-                    argsString = "USD";
+                    Log.d(TAG, "loadInBackground: is null");
+                    argsString = shared;
                 }
 
                 Log.d(TAG, "loadInBackground: argsString " + argsString);
@@ -222,12 +241,17 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // TODO: 10/12/2017 add shared preferences
+
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         String base = parent.getItemAtPosition(position).toString();
+
         Log.d(TAG, "onItemSelected: " + position + " coin: " + base);
         //Get the value stored in shared pref
-        String sharedPrefVal = "USD";
+        String sharedPrefVal = sharedPreferences.getString("base", "EUR");
+        Log.d(TAG, "onItemSelected: sharedPrefVal " + sharedPrefVal);
         if(!base.equals(sharedPrefVal)){
             setData(base);
+            sharedPreferences(base);
         }
     }
 
@@ -272,4 +296,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    private void sharedPreferences(String base) {
+        // SharedPreferences
+        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("base", base);
+        editor.commit();
+    }
 }
