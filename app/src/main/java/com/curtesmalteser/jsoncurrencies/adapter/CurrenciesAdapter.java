@@ -106,9 +106,9 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
             
             mImgFlag.setImageResource(R.drawable.ic_dollar_sign);
             // TODO: 03/12/2017 create the country array for mTvCountry 
-            mTvCountry.setText(model.getCoin());
-            mTvCoin.setText(model.getCoin());
-            mTvCurrency.setText(String.valueOf(model.getCurrency()));
+            mTvCountry.setText(model.getCurrency());
+            mTvCoin.setText(model.getCurrency());
+            mTvCurrency.setText(String.valueOf(model.getRate()));
         }
 
         @Override

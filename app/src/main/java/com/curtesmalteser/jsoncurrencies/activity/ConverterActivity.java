@@ -8,6 +8,8 @@ import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -44,6 +46,10 @@ public class ConverterActivity extends AppCompatActivity
 
         converterBinding = DataBindingUtil.setContentView(this, R.layout.activity_converter);
 
+        // Used to change EditText's ID, other away the APP will identify them as being only one
+        converterBinding.baseConverter.etValue.setId(R.id.base_et_value);
+        converterBinding.selectedCurrencyConverter.etValue.setId(R.id.selected_et_Value);
+
         converterModel = ViewModelProviders.of(this).get(ConverterModel.class);
 
         // TODO: 08/12/2017 Add the menu
@@ -51,18 +57,18 @@ public class ConverterActivity extends AppCompatActivity
         if (getIntent().hasExtra("currency")) {
             CurrenciesModel currenciesModel = getIntent().getParcelableExtra("currency");
 
-
             converterModel.setBaseDate(currenciesModel.getDate());
+
             converterBinding.baseConverter.tvDateCurrency.setText(converterModel.getBaseDate());
 
             converterModel.setBaseCoin(currenciesModel.getBase());
             converterBinding.baseConverter.baseLabel.setText(converterModel.getBaseCoin());
 
-            converterBinding.baseConverter.currencyLabel.setText(currenciesModel.getCoin());
+            converterBinding.baseConverter.currencyLabel.setText(currenciesModel.getCurrency());
 
-            Log.d(TAG, "getCoin: " + currenciesModel.getCoin());
+            Log.d(TAG, "getCurrency: " + currenciesModel.getCurrency());
 
-            converterModel.setBaseRate(currenciesModel.getCurrency());
+            converterModel.setBaseRate(currenciesModel.getRate());
             converterBinding.baseConverter.tvRate.setText(String.valueOf(converterModel.getBaseRate()));
 
             // AsyncTaskLoader call
@@ -83,17 +89,36 @@ public class ConverterActivity extends AppCompatActivity
         converterBinding.baseConverter.tvResult.setText(String.valueOf(converterModel.getBaseResult()));
         converterBinding.selectedCurrencyConverter.tvResult.setText(String.valueOf(converterModel.getReverseResult()));
 
-        converterBinding.baseConverter.buttonGetResult.setOnClickListener(new View.OnClickListener() {
+        converterBinding.baseConverter.etValue.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 displayBaseToForeign();
             }
-        });
 
-        converterBinding.selectedCurrencyConverter.buttonGetResult.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        converterBinding.selectedCurrencyConverter.etValue.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 displayForeignToBase();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
@@ -138,20 +163,20 @@ public class ConverterActivity extends AppCompatActivity
 
             @Override
             protected void onStartLoading() {
-               if (currenciesModel != null) {
-                   deliverResult(currenciesModel);
-                   converterBinding.progressBar.setVisibility(View.INVISIBLE);
-               } else {
-                   converterBinding.progressBar.setVisibility(View.VISIBLE);
-                   forceLoad();
-               }
+                if (currenciesModel != null) {
+                    deliverResult(currenciesModel);
+                    converterBinding.progressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    converterBinding.progressBar.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
             }
 
             @Override
             public CurrenciesModel loadInBackground() {
 
                 CurrenciesModel cm = args.getParcelable(FIXER_QUERY_EXTRA);
-                String base = cm.getCoin();
+                String base = cm.getCurrency();
 
                 URL url = NetworkUtils.buildUrlLatest(base);
                 try {
@@ -183,13 +208,13 @@ public class ConverterActivity extends AppCompatActivity
             converterModel.setReverseBase(data.getBase());
             converterBinding.selectedCurrencyConverter.baseLabel.setText(converterModel.getReverseBase());
 
-            converterModel.setReverseCoin(data.getCoin());
+            converterModel.setReverseCoin(data.getCurrency());
             converterBinding.selectedCurrencyConverter.currencyLabel.setText(converterModel.getReverseCoin());
 
             converterModel.setReverseDate(data.getDate());
             converterBinding.selectedCurrencyConverter.tvDateCurrency.setText(converterModel.getReverseDate());
 
-            converterModel.setReverseRate(data.getCurrency());
+            converterModel.setReverseRate(data.getRate());
             converterBinding.selectedCurrencyConverter.tvRate.setText(String.valueOf(converterModel.getReverseRate()));
         } else {
             Log.d(TAG, "onLoadFinished: data is null");

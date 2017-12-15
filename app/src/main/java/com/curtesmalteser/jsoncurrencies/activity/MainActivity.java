@@ -1,6 +1,6 @@
 package com.curtesmalteser.jsoncurrencies.activity;
 
-import android.annotation.SuppressLint;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.adapter.CurrenciesAdapter;
 import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
+import com.curtesmalteser.jsoncurrencies.db.CurrenciesDao;
+import com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 import com.curtesmalteser.jsoncurrencies.utilities.FixerJsonUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
@@ -36,6 +39,8 @@ import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase.getDatabase;
 
 // COMPLETED (1) Implement the proper LoaderCallbacks interface and the methods of that interface
 public class MainActivity extends AppCompatActivity implements
@@ -54,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements
     private CurrenciesAdapter mCurrenciesAdpater;
 
     private ActivityMainBinding mainBinding;
+
+    // Room variables
+    private CurrenciesDao mCurDao;
+    private CurrenciesDatabase mDb;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +116,11 @@ public class MainActivity extends AppCompatActivity implements
 
         loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
 
+
+        // Instantiate Room DB
+        mDb = CurrenciesDatabase.getDatabase(this);
+        mCurDao = mDb.currenciesDao();
+
     }
 
     // TODO: 04/12/2017 Replace with real data
@@ -134,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<ArrayList<CurrenciesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<CurrenciesModel>>(this) {
 
-            // COMPLETED (xxx) Cache the currencies data in a member variable and deliver it in onStartLoading.
+            // COMPLETED - Cache the currencies data in a member variable and deliver it in onStartLoading.
             ArrayList<CurrenciesModel> mModelArrayList = null;
 
             @Override
@@ -176,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements
                 try {
                     String data = NetworkUtils.getResponseFromHttpUrl(url);
                     mCurrenciesModelArrayList = FixerJsonUtils.getCurrencies(data);
+                    Log.d(TAG, "mCurrenciesModelArrayList: " + mCurrenciesModelArrayList.size());
+
+                    mCurDao.addCurrencies(mCurrenciesModelArrayList);
 
                     return mCurrenciesModelArrayList;
 
@@ -208,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements
                     .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
 
             mainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate());
+
+
         }
         mainBinding.progressBar.setVisibility(View.INVISIBLE);
     }
@@ -268,8 +289,9 @@ public class MainActivity extends AppCompatActivity implements
         // COMPLETED - Add a switch and add an action to which case
         switch (item.getItemId() ) {
 
-            case R.id.action_toast :
-                Toast.makeText(this, "action_toast", Toast.LENGTH_SHORT).show();
+            case R.id.action_share:
+                actionShare();
+                Toast.makeText(this, R.string.share, Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.action_test :
@@ -286,6 +308,19 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void actionShare() {
+        String mimeType = "text/Plain";
+        String title = "JSONCurrencies";
+
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setChooserTitle(title)
+                .setType(mimeType)
+                .setText(getString(R.string.text_to_share))
+                .setSubject("JSONCurrencies")
+                .startChooser();
     }
 
 

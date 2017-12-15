@@ -1,7 +1,9 @@
 package com.curtesmalteser.jsoncurrencies.model;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,34 +11,39 @@ import android.os.Parcelable;
  * Created by anton on 29/11/2017.
  */
 
+@Entity(tableName = "currencies_table")
 public class CurrenciesModel implements Parcelable{
 
+    @PrimaryKey(autoGenerate = true)
     int id;
 
+    @ColumnInfo(name = "selected_currency")
     private String base;
 
     private String date;
 
-    private String coin;
+    private String currency;
 
-    private Double currency;
+    private Double rate;
 
-    public CurrenciesModel(String base, String date, String coin, Double currency) {
+    @Ignore
+    public CurrenciesModel(String base, String date, String currency, Double rate) {
         this.base = base;
         this.date = date;
-        this.coin = coin;
         this.currency = currency;
+        this.rate = rate;
     }
 
+    // TODO: 14/12/2017 remove the int from the constructor?
     /**
      * Constructs a CurrenciesModel to use with ArrayList
      */
-    public CurrenciesModel(int id, String base, String date, String coin, Double currency) {
+    public CurrenciesModel(int id, String base, String date, String currency, Double rate) {
         this.id = id;
         this.base = base;
         this.date = date;
-        this.coin = coin;
         this.currency = currency;
+        this.rate = rate;
     }
 
     /**
@@ -47,8 +54,8 @@ public class CurrenciesModel implements Parcelable{
         this.id = parcel.readInt();
         this.base = parcel.readString();
         this.date = parcel.readString();
-        this.coin = parcel.readString();
-        this.currency = parcel.readDouble();
+        this.currency = parcel.readString();
+        this.rate = parcel.readDouble();
     }
 
     @Override
@@ -63,8 +70,8 @@ public class CurrenciesModel implements Parcelable{
         dest.writeInt(id);
         dest.writeString(base);
         dest.writeString(date);
-        dest.writeString(coin);
-        dest.writeDouble(currency);
+        dest.writeString(currency);
+        dest.writeDouble(rate);
 
     }
 
@@ -106,20 +113,20 @@ public class CurrenciesModel implements Parcelable{
         this.date = date;
     }
 
-    public String getCoin() {
-        return coin;
-    }
-
-    public void setCoin(String coin) {
-        this.coin = coin;
-    }
-
-    public Double getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Double currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
     }
 
 

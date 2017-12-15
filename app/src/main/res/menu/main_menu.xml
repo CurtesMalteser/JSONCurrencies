@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- TODO (2) - Add an item and give an id to it-->
     <item
-        android:id="@+id/action_toast"
-        android:title="@string/toast"
+        android:id="@+id/action_share"
+        android:title="@string/share"
         android:orderInCategory="1"
         app:showAsAction="ifRoom"/>
 
