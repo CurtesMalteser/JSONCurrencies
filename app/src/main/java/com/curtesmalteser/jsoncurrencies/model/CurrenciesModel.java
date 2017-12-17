@@ -6,24 +6,47 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.BaseColumns;
 
 /**
- * Created by anton on 29/11/2017.
+ * Created by "Curtes Malteser" on 29/11/2017.
  */
 
-@Entity(tableName = "currencies_table")
+@Entity(tableName = CurrenciesModel.TABLE_NAME)
 public class CurrenciesModel implements Parcelable{
 
-    @PrimaryKey(autoGenerate = true)
+    // Table name
+    public static final String TABLE_NAME = "currencies_table";
+
+    // Set the name of ID column
+    public static final String COLUMN_ID = BaseColumns._ID;
+
+    // Set the name of base column
+    public static final String COLUMN_BASE = "base";
+
+    // Set the name of date column
+    public static final String COLUMN_DATE = "date";
+
+    // Set the name of currency column
+    public static final String COLUMN_CURRENCY = "selected_currency";
+
+    // Set the name of rate column
+    public static final String COLUMN_RATE = "rate";
+
+    @PrimaryKey(autoGenerate = false) //By default is false. I left it to make the code clear.
+    @ColumnInfo(index = true, name = COLUMN_ID)
     int id;
 
-    @ColumnInfo(name = "selected_currency")
+    @ColumnInfo(name = COLUMN_BASE)
     private String base;
 
+    @ColumnInfo(name = COLUMN_DATE)
     private String date;
 
+    @ColumnInfo(name = COLUMN_CURRENCY)
     private String currency;
 
+    @ColumnInfo(name = COLUMN_RATE)
     private Double rate;
 
     @Ignore
@@ -34,7 +57,7 @@ public class CurrenciesModel implements Parcelable{
         this.rate = rate;
     }
 
-    // TODO: 14/12/2017 remove the int from the constructor?
+    // TODO: 14/12/2017 remove the int from the constructor???
     /**
      * Constructs a CurrenciesModel to use with ArrayList
      */

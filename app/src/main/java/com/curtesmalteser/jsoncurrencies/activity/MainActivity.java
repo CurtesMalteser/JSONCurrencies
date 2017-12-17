@@ -1,6 +1,5 @@
 package com.curtesmalteser.jsoncurrencies.activity;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,12 +34,9 @@ import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase.getDatabase;
 
 // COMPLETED (1) Implement the proper LoaderCallbacks interface and the methods of that interface
 public class MainActivity extends AppCompatActivity implements
@@ -55,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int SEARCH_LOADER_ID = 22;
     private static final String TAG = "AJDB";
 
-    // COMPLETED - create a membr variable for CurrenciesAdapter
+    // COMPLETED - create a member variable for CurrenciesAdapter
     private CurrenciesAdapter mCurrenciesAdpater;
 
     private ActivityMainBinding mainBinding;

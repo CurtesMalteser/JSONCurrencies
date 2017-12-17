@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.curtesmalteser.jsoncurrencies">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -27,6 +27,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity"/>
         </activity>
+
+        <!-- Register the ContentProvider -->
+        <provider
+            android:authorities="com.curtesmalteser.jsoncurrencies.provider"
+            android:name="com.curtesmalteser.jsoncurrencies.provider.CurrenciesContentProvider"
+            android:exported="true"
+            android:permission="com.curtesmalteser.jsoncurrencies.provider.READ"/>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.database.Cursor;
 
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 
@@ -27,12 +28,22 @@ public interface CurrenciesDao {
     @Update(onConflict = REPLACE)
     int updateCurrencies(CurrenciesModel... currenciesModel);
 
-    @Query("SELECT * FROM currencies_table")
+    @Query("SELECT * FROM " + CurrenciesModel.TABLE_NAME)
     public LiveData<List<CurrenciesModel>> getAllCurrencies();
 
-    @Query("SELECT * FROM currencies_table WHERE currency LIKE :selectedCurency")
-    public CurrenciesModel selectSingleCurrency(String selectedCurency);
+    @Query("SELECT * FROM currencies_table WHERE selected_currency LIKE :selectedCurrency")
+    public CurrenciesModel selectSingleCurrency(String selectedCurrency);
 
     @Delete
     public void deleteCurrencies(CurrenciesModel... currenciesModel);
+
+    //***************** Methods to use with ContentProvider *****************//
+    // This methods returns a Cursor to use on CurrenciesContentProvider and select all currencies
+    @Query("SELECT * FROM " + CurrenciesModel.TABLE_NAME)
+    Cursor selectAll();
+
+    // Select a cheese by the ID
+    // ATTENTION: it has to to take a long id because that's uri parse pass
+    @Query("SELECT * FROM " + CurrenciesModel.TABLE_NAME + " WHERE " + CurrenciesModel.COLUMN_ID + " = :id")
+    Cursor selectById(long id);
 }
