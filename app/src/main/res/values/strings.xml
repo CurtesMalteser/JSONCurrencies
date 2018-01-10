@@ -14,4 +14,8 @@
     <string name="equal_sign">=</string>
     <string name="one_string">1</string>
     <string name="hint">0.00</string>
+
+    <!-- Strings for Notifications and Toasts -->
+    <string name="main_notification_channel_name">Primary</string>
+
 </resources>

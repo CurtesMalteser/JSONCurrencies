@@ -1,6 +1,9 @@
 package com.curtesmalteser.jsoncurrencies.utilities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -10,8 +13,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.curtesmalteser.jsoncurrencies.activity.MainActivity.appContext;
+
 /**
- * Created by anton on 29/11/2017. Base on
+ * Created by anton on 29/11/2017. Based on
  * Udacity Google Developer Challenge Scholarship: Android Dev ? lessons
  */
 
@@ -83,6 +89,14 @@ public class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public static URL getUrl(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("currencies", MODE_PRIVATE);
+        String shared = sharedPreferences.getString("base", "EUR");
+
+        return buildUrlLatest(shared);
+
     }
 
 }

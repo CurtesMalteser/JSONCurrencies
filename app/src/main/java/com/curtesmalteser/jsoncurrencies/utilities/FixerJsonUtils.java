@@ -79,8 +79,6 @@ public class FixerJsonUtils {
                 currencies.add(FJU_COINS[y]);
             }
 
-
-
         }
         for (int i = 0; i < currencies.size(); i++) {
             mCrrenciesModelArrayList.add(i, new CurrenciesModel(
@@ -91,9 +89,6 @@ public class FixerJsonUtils {
                     getDouble(currencies.get(i), ratesObject)
             ));
         }
-
-
-
 
         return mCrrenciesModelArrayList;
     }
@@ -112,6 +107,43 @@ public class FixerJsonUtils {
         );
 
         return currenciesModel;
+    }
+
+    public static ContentValues[] getCurrenciesContentValues (Context context, String resultJson) throws JSONException {
+
+        JSONObject baseObject = new JSONObject(resultJson);
+
+        JSONObject ratesObject = baseObject.getJSONObject(FJU_RATES);
+
+        /** Makes a copy of the currencies FJU_COINS and exclude the base currency so,
+         * this way it will no be parsed on JSON ratesObject avoiding errors
+         * because the base currency key doesn't exist on this JSONObject
+         */
+        ArrayList<String> currencies = new ArrayList<>();
+        for (int y = 0; y <= ratesObject.length(); y++) {
+            if (!getString(FJU_BASE, baseObject).equals(FJU_COINS[y])) {
+                currencies.add(FJU_COINS[y]);
+            }
+
+        }
+
+        ContentValues[] currenciesContentValues = new ContentValues[currencies.size()];
+
+        for (int i = 0; i < currencies.size(); i++) {
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put( CurrenciesModel.COLUMN_ID, i);
+            contentValues.put( CurrenciesModel.COLUMN_BASE, getString(FJU_BASE, baseObject));
+            contentValues.put( CurrenciesModel.COLUMN_DATE, getString(FJU_CURRENCY_DATE, baseObject));
+            contentValues.put( CurrenciesModel.COLUMN_CURRENCY, currencies.get(i));
+            contentValues.put( CurrenciesModel.COLUMN_RATE, getDouble(currencies.get(i), ratesObject));
+
+            currenciesContentValues[i] = contentValues;
+
+        }
+
+        return currenciesContentValues;
     }
 
     //this return all JSONObject to be parsed

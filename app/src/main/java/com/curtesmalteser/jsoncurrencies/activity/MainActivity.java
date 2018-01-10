@@ -28,6 +28,7 @@ import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDao;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
+import com.curtesmalteser.jsoncurrencies.sync.CurrenciesSyncUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.FixerJsonUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
 
@@ -40,7 +41,8 @@ import java.util.Arrays;
 
 // COMPLETED (1) Implement the proper LoaderCallbacks interface and the methods of that interface
 public class MainActivity extends AppCompatActivity implements
-        LoaderCallbacks<ArrayList<CurrenciesModel>>, CurrenciesAdapter.ListItemClickListener, AdapterView.OnItemSelectedListener{
+        LoaderCallbacks<ArrayList<CurrenciesModel>>, CurrenciesAdapter.ListItemClickListener,
+        AdapterView.OnItemSelectedListener{
 
     /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
@@ -61,10 +63,13 @@ public class MainActivity extends AppCompatActivity implements
     private CurrenciesDatabase mDb;
 
 
+    public static Context appContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appContext = getApplicationContext();
 
         mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -76,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements
         mainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
         mainBinding.localCoin.labelCurrencyDate.setText("N/A");
 
-
-
         // Create an ArrayAdapter with the string array currencies_array
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.currencies_array, android.R.layout.simple_spinner_item);
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
 
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("currencies", MODE_PRIVATE);
         String index = sharedPreferences.getString("base", "EUR");
 
         Log.d(TAG, "index: " + index);
@@ -117,13 +120,10 @@ public class MainActivity extends AppCompatActivity implements
         mDb = CurrenciesDatabase.getDatabase(this);
         mCurDao = mDb.currenciesDao();
 
+       CurrenciesSyncUtils.initialize(this);
+
     }
 
-    // TODO: 04/12/2017 Replace with real data
-    // TODO: Duplicate the method to get the data, one for the spinner and on for the method on create
-    // The spinner will forLoad() the AsyncTaskLoader and the setData(), will execute the code from
-    // out lectures, so the loader will only populate the recycler view
-    //
     private void setData(String base) {
 
         LoaderCallbacks<ArrayList<CurrenciesModel>> callback = MainActivity.this;
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 String argsString;
 
-                SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("currencies", MODE_PRIVATE);
                 String shared = sharedPreferences.getString("base", "EUR");
                 Log.d(TAG, "sharedPreferences: " + shared);
                 if(args != null) {
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("currencies", MODE_PRIVATE);
         String base = parent.getItemAtPosition(position).toString();
 
         //Get the value stored in shared pref
@@ -322,9 +322,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void sharedPreferences(String base) {
         // SharedPreferences
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("base", base);
-        editor.commit();
+        SharedPreferences.Editor  sharedPreferences = getSharedPreferences("currencies", Context.MODE_PRIVATE).edit();
+        sharedPreferences.putString("base", base);
+        sharedPreferences.commit();
     }
 }

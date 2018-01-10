@@ -43,6 +43,9 @@ dependencies {
     // Add ROOM dependencies
     implementation 'android.arch.persistence.room:runtime:1.0.0'
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
-    // Add Lifecycles
+    // Lifecycles
     annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
+
+    // Firebase JobDispatcher
+    implementation 'com.firebase:firebase-jobdispatcher:0.5.2'
 }

@@ -3,6 +3,7 @@
     package="com.curtesmalteser.jsoncurrencies">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -34,6 +35,16 @@
             android:name="com.curtesmalteser.jsoncurrencies.provider.CurrenciesContentProvider"
             android:exported="true"
             android:permission="com.curtesmalteser.jsoncurrencies.provider.READ"/>
+
+        <service android:name=".sync.CurrenciesSyncIntentService"
+            android:exported="false"/>
+
+        <service android:name=".sync.CurrenciesFirebaseJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
