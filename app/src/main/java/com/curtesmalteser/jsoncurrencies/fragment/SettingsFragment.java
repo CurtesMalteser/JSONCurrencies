@@ -6,7 +6,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import com.curtesmalteser.jsoncurrencies.R;
 
 /**
- * Created by anton on 10/12/2017.
+ * Created by António "Curtes Malteser" Bastião on 10/12/2017.
  */
 
 public class SettingsFragment extends PreferenceFragmentCompat {

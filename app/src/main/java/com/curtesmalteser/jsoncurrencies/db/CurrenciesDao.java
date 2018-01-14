@@ -16,7 +16,7 @@ import java.util.List;
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /**
- * Created by Curtes Malteser on 14/12/2017.
+ * Created by António "Curtes Malteser" Bastião on 14/12/2017.
  */
 
 @Dao

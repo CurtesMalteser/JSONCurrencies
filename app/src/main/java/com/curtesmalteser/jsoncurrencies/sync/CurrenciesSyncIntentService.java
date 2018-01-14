@@ -3,6 +3,7 @@ package com.curtesmalteser.jsoncurrencies.sync;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.curtesmalteser.jsoncurrencies.utilities.ReminderTasks;
 

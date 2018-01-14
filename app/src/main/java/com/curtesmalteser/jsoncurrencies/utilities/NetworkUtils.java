@@ -17,7 +17,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.curtesmalteser.jsoncurrencies.activity.MainActivity.appContext;
 
 /**
- * Created by anton on 29/11/2017. Based on
+ * Created by António "Curtes Malteser" Bastião 29/11/2017. Based on
  * Udacity Google Developer Challenge Scholarship: Android Dev ? lessons
  */
 
@@ -55,7 +55,6 @@ public class NetworkUtils {
         URL url = null;
         try {
             url = new URL(buildUri.toString().replace("%3F", "").replace("%3D", ""));
-            Log.d("AJDB", "buildUrlLatest: " + url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -96,7 +95,6 @@ public class NetworkUtils {
         String shared = sharedPreferences.getString("base", "EUR");
 
         return buildUrlLatest(shared);
-
     }
 
 }

@@ -9,7 +9,7 @@ import android.os.Parcelable;
 import android.provider.BaseColumns;
 
 /**
- * Created by "Curtes Malteser" on 29/11/2017.
+ * Created by António "Curtes Malteser" Bastião on 29/11/2017.
  */
 
 @Entity(tableName = CurrenciesModel.TABLE_NAME)

@@ -15,7 +15,7 @@ import com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 
 /**
- * Created by "Curtes Malteser" on 17/12/2017.
+ * Created by António "Curtes Malteser" Bastião on 17/12/2017.
  */
 
 public class CurrenciesContentProvider extends ContentProvider {

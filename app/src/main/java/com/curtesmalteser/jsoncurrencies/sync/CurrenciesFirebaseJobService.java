@@ -3,6 +3,7 @@ package com.curtesmalteser.jsoncurrencies.sync;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Loader;
+import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
@@ -24,14 +25,17 @@ public class CurrenciesFirebaseJobService extends JobService {
             @Override
             public Object loadInBackground() {
                 CurrenciesSyncTask.syncCurriesData(context);
+                CurrenciesSyncUtils.initialize(context);
+                jobFinished(jobParameters, false);
                 return null;
             }
 
-            @Override
+          /*  @Override
             public void deliverResult(Object data) {
                 super.deliverResult(data);
                 jobFinished(jobParameters, false);
-            }
+
+            }*/
 
         };
 

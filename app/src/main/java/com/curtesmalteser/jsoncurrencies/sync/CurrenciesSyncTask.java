@@ -31,7 +31,7 @@ public class CurrenciesSyncTask {
 
             if (contentValues != null && contentValues.length != 0) {
                 ContentResolver currenciesContentResolver = context.getContentResolver();
-
+                
                 currenciesContentResolver.delete(
                         CurrenciesContentProvider.URI_CURRENCIES,
                         null,
@@ -40,6 +40,11 @@ public class CurrenciesSyncTask {
                 currenciesContentResolver.bulkInsert(
                         CurrenciesContentProvider.URI_CURRENCIES,
                         contentValues);
+
+                // todo - check if this is executed
+                Log.d(TAG, "bulkInsert: " + contentValues.length);
+                Log.d(TAG, contentValues[1].get("base").toString());
+                Log.d(TAG, "bulkInsert: " + CurrenciesContentProvider.URI_CURRENCIES.toString());
 
                 NotificationUtils.notifyUserOfNewRates(context);
             }

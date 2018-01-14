@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
     * to any number you like, as long as you use the same variable name.
     */
     private static final int SEARCH_LOADER_ID = 22;
-    private static final String TAG = "AJDB";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     // COMPLETED - create a member variable for CurrenciesAdapter
     private CurrenciesAdapter mCurrenciesAdpater;
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences sharedPreferences = this.getSharedPreferences("currencies", MODE_PRIVATE);
         String index = sharedPreferences.getString("base", "EUR");
 
-        Log.d(TAG, "index: " + index);
-
         String[] array = getResources().getStringArray(R.array.currencies_array);
         int value = Arrays.asList(array).indexOf(index);
         mainBinding.localCoin.spinnerSelectCoin.setSelection(value);
@@ -115,12 +113,11 @@ public class MainActivity extends AppCompatActivity implements
 
         loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
 
+        CurrenciesSyncUtils.initialize(this);
 
         // Instantiate Room DB
         mDb = CurrenciesDatabase.getDatabase(this);
         mCurDao = mDb.currenciesDao();
-
-       CurrenciesSyncUtils.initialize(this);
 
     }
 
@@ -135,9 +132,6 @@ public class MainActivity extends AppCompatActivity implements
         // Use the code restartLoader will also make the initLoader case the Loader doesn't exist
         // So I'm saving lines of code here
         getSupportLoaderManager().restartLoader(SEARCH_LOADER_ID, bundleForLoader, callback).forceLoad();
-
-
-
 
     }
 
@@ -170,25 +164,19 @@ public class MainActivity extends AppCompatActivity implements
 
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("currencies", MODE_PRIVATE);
                 String shared = sharedPreferences.getString("base", "EUR");
-                Log.d(TAG, "sharedPreferences: " + shared);
                 if(args != null) {
 
                     argsString = args.getString("base");
-                    Log.d(TAG, "loadInBackground: is not null " + argsString);
                 } else {
-                    Log.d(TAG, "loadInBackground: is null");
                     argsString = shared;
                 }
-
-                Log.d(TAG, "loadInBackground: argsString " + argsString);
 
                 ArrayList<CurrenciesModel> mCurrenciesModelArrayList;
 
                 URL url = NetworkUtils.buildUrlLatest(argsString);
                 try {
                     String data = NetworkUtils.getResponseFromHttpUrl(url);
-                    mCurrenciesModelArrayList = FixerJsonUtils.getCurrencies(data);
-                    Log.d(TAG, "mCurrenciesModelArrayList: " + mCurrenciesModelArrayList.size());
+                    mCurrenciesModelArrayList = FixerJsonUtils.getCurrencies(MainActivity.this, data);
 
                     mCurDao.addCurrencies(mCurrenciesModelArrayList);
 

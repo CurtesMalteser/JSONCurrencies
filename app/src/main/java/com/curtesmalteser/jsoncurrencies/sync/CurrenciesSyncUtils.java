@@ -1,11 +1,11 @@
 package com.curtesmalteser.jsoncurrencies.sync;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 import com.curtesmalteser.jsoncurrencies.provider.CurrenciesContentProvider;
@@ -26,8 +26,10 @@ import java.util.concurrent.TimeUnit;
 
 public class CurrenciesSyncUtils {
 
-    private static final int SYNC_INTERVAL_HOURS = 3;
-    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
+    //private static final int SYNC_INTERVAL_HOURS = 3;
+    private static final int SYNC_INTERVAL_HOURS = 1;
+    //private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
+    private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.MINUTES.toSeconds(SYNC_INTERVAL_HOURS);
     private static final int SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3;
 
     private static boolean sInitialized;
@@ -65,39 +67,38 @@ public class CurrenciesSyncUtils {
 
         scheduleFirebaseJobDispatcher(context);
 
-        Thread checkForEmpty = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Thread checkForEmpty = new Thread(() -> {
 
-                Uri currenciesQueryUri = CurrenciesContentProvider.URI_CURRENCIES;
+            Uri currenciesQueryUri = CurrenciesContentProvider.URI_CURRENCIES;
 
-                String[] projectionColumns = {CurrenciesModel.COLUMN_ID};
+            String[] projectionColumns = {CurrenciesModel.COLUMN_ID};
 
-                // TODO: 09/01/2018 handle case the date is changed like in exercise S10.02
-                /*String selectionStatement = WeatherContract.WeatherEntry
-                        .getSqlSelectForTodayOnwards();*/
+            // TODO: 09/01/2018 handle case the date is changed like in exercise S10.02
+            /*String selectionStatement = WeatherContract.WeatherEntry
+                    .getSqlSelectForTodayOnwards();*/
 
-                Cursor cursor = context.getContentResolver().query(
-                        currenciesQueryUri,
-                        projectionColumns,
-                        null,
-                        null,
-                        null
-                );
+            Cursor cursor = context.getContentResolver().query(
+                    currenciesQueryUri,
+                    projectionColumns,
+                    null,
+                    null,
+                    null
+            );
 
-                if (null == cursor || cursor.getCount() == 0) {
-                    startImmediateSync(context);
-                }
-
-                // Make sure to close the Cursor to avoid memory leaks!
-                cursor.close();
+            if (null == cursor || cursor.getCount() == 0) {
+                startImmediateSync(context);
             }
+
+            // Make sure to close the Cursor to avoid memory leaks!
+            cursor.close();
         });
+
+        /* Finally, once the thread is prepared, fire it off to perform our checks. */
+        checkForEmpty.start();
     }
 
     public static void startImmediateSync(@NonNull final Context context) {
         Intent intentToSyncImmediately = new Intent(context, CurrenciesSyncIntentService.class);
         context.startService(intentToSyncImmediately);
     }
-
 }

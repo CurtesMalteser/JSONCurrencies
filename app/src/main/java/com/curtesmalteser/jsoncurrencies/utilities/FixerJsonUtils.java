@@ -16,52 +16,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by anton on 29/11/2017.
+ * Created by António "Curtes Malteser" Bastião on 29/11/2017.
  */
 
 public class FixerJsonUtils {
 
+    // FJU == FixerJsonUtils
     private static final String FJU_CURRENCY_DATE = "date"; // "date":"2017-11-28"
 
     private static final String FJU_RATES = "rates"; // "rates"
 
     private static final String FJU_BASE = "base"; // "base"
 
-    // TODO - Replace this array with res array that is already done
-    private static final String[] FJU_COINS = { "EUR",
-            "AUD",
-            "BGN",
-            "BRL",
-            "CAD",
-            "CHF",
-            "CNY",
-            "CZK",
-            "DKK",
-            "GBP",
-            "HKD",
-            "HRK",
-            "HUF",
-            "IDR",
-            "ILS",
-            "INR",
-            "JPY",
-            "KRW",
-            "MXN",
-            "MYR",
-            "NOK",
-            "NZD",
-            "PHP",
-            "PLN",
-            "RON",
-            "RUB",
-            "SEK",
-            "SGD",
-            "THB",
-            "TRY",
-            "USD",
-            "ZAR"};
+    private static String[] fju_coins; // Array of currencies to parse the Json response
 
-    public static ArrayList<CurrenciesModel> getCurrencies ( String resultJson) throws JSONException {
+    public static ArrayList<CurrenciesModel> getCurrencies ( Context context, String resultJson ) throws JSONException {
+
+        fju_coins = context.getResources().getStringArray(R.array.currencies_array);
 
         ArrayList<CurrenciesModel> mCrrenciesModelArrayList= new ArrayList<>();
 
@@ -75,8 +46,8 @@ public class FixerJsonUtils {
          */
         ArrayList<String> currencies = new ArrayList<>();
         for (int y = 0; y <= ratesObject.length(); y++) {
-            if (!getString(FJU_BASE, baseObject).equals(FJU_COINS[y])) {
-                currencies.add(FJU_COINS[y]);
+            if (!getString(FJU_BASE, baseObject).equals(fju_coins[y])) {
+                currencies.add(fju_coins[y]);
             }
 
         }
@@ -111,6 +82,8 @@ public class FixerJsonUtils {
 
     public static ContentValues[] getCurrenciesContentValues (Context context, String resultJson) throws JSONException {
 
+        fju_coins = context.getResources().getStringArray(R.array.currencies_array);
+
         JSONObject baseObject = new JSONObject(resultJson);
 
         JSONObject ratesObject = baseObject.getJSONObject(FJU_RATES);
@@ -121,10 +94,9 @@ public class FixerJsonUtils {
          */
         ArrayList<String> currencies = new ArrayList<>();
         for (int y = 0; y <= ratesObject.length(); y++) {
-            if (!getString(FJU_BASE, baseObject).equals(FJU_COINS[y])) {
-                currencies.add(FJU_COINS[y]);
+            if (!getString(FJU_BASE, baseObject).equals(fju_coins[y])) {
+                currencies.add(fju_coins[y]);
             }
-
         }
 
         ContentValues[] currenciesContentValues = new ContentValues[currencies.size()];

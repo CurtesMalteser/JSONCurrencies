@@ -8,7 +8,7 @@ import android.content.Context;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 
 /**
- * Created by Curtes Malteser on 15/12/2017.
+ * Created by António "Curtes Malteser" Bastião on 15/12/2017.
  */
 
 @Database(entities = {CurrenciesModel.class}, version = 1)

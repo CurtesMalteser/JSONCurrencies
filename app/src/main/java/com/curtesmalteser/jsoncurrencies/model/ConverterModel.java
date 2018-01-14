@@ -3,7 +3,7 @@ package com.curtesmalteser.jsoncurrencies.model;
 import android.arch.lifecycle.ViewModel;
 
 /**
- * Created by anton on 11/12/2017.
+ * Created by António "Curtes Malteser" Bastião on 11/12/2017.
  */
 
 public class ConverterModel extends ViewModel {

@@ -50,7 +50,7 @@ public class NotificationUtils {
 
     public static void notifyUserOfNewRates(Context context) {
 
-        // TODO: 10/01/2018 make a URI with data like the one from  ???
+        // TODO: 10/01/2018 make a URI with date like the one from  ???
         Uri todayCurrenciesUri = CurrenciesContentProvider.URI_CURRENCIES;
 
         Cursor todayCurrenciesCursor = context.getContentResolver()
@@ -78,8 +78,8 @@ public class NotificationUtils {
 
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CURRENCIES_REMINDER_NOTIFICATION_CHANNEL_ID)
-                    .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-                    .setSmallIcon(R.drawable.ic_action_name)
+                    .setColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+                    .setSmallIcon(R.drawable.ic_money)
                     .setContentTitle("JSON Currencies")
                     .setContentText("Check the latest rates for your favourite currency")
                     .setSound(notification)
@@ -127,7 +127,7 @@ public class NotificationUtils {
                 ignoreReminderIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.drawable.ic_money,
+        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(R.drawable.ic_action_cancel,
                 "No, thanks.",
                 ignoreReminderPendingIntent);
 

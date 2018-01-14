@@ -15,7 +15,7 @@ import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 import java.util.ArrayList;
 
 /**
- * Created by anton on 29/11/2017.
+ * Created by António "Curtes Malteser" Bastião on 29/11/2017.
  */
 
 
