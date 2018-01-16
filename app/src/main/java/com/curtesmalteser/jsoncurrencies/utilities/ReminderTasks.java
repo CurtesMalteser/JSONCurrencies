@@ -12,6 +12,7 @@ public class ReminderTasks {
 
     public static final String ACTION_DISMISS_NOTIFICATION = "dismiss-notification";
     public static void executeTask(Context context, String action) {
+        Log.d("AJDB", "2 - executeTask: ");
         if (ACTION_DISMISS_NOTIFICATION.equals(action)) {
             NotificationUtils.clearAllNotifications(context);
         }

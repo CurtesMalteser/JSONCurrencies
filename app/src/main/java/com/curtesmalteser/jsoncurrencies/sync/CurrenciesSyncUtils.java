@@ -67,30 +67,33 @@ public class CurrenciesSyncUtils {
 
         scheduleFirebaseJobDispatcher(context);
 
-        Thread checkForEmpty = new Thread(() -> {
+        Thread checkForEmpty = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            Uri currenciesQueryUri = CurrenciesContentProvider.URI_CURRENCIES;
+                Uri currenciesQueryUri = CurrenciesContentProvider.URI_CURRENCIES;
 
-            String[] projectionColumns = {CurrenciesModel.COLUMN_ID};
+                String[] projectionColumns = {CurrenciesModel.COLUMN_ID};
 
-            // TODO: 09/01/2018 handle case the date is changed like in exercise S10.02
-            /*String selectionStatement = WeatherContract.WeatherEntry
-                    .getSqlSelectForTodayOnwards();*/
+                // TODO: 09/01/2018 handle case the date is changed like in exercise S10.02
+        /*String selectionStatement = WeatherContract.WeatherEntry
+                .getSqlSelectForTodayOnwards();*/
 
-            Cursor cursor = context.getContentResolver().query(
-                    currenciesQueryUri,
-                    projectionColumns,
-                    null,
-                    null,
-                    null
-            );
+                Cursor cursor = context.getContentResolver().query(
+                        currenciesQueryUri,
+                        projectionColumns,
+                        null,
+                        null,
+                        null
+                );
 
-            if (null == cursor || cursor.getCount() == 0) {
-                startImmediateSync(context);
+                if (null == cursor || cursor.getCount() == 0) {
+                    startImmediateSync(context);
+                }
+
+                // Make sure to close the Cursor to avoid memory leaks!
+                cursor.close();
             }
-
-            // Make sure to close the Cursor to avoid memory leaks!
-            cursor.close();
         });
 
         /* Finally, once the thread is prepared, fire it off to perform our checks. */
@@ -98,6 +101,7 @@ public class CurrenciesSyncUtils {
     }
 
     public static void startImmediateSync(@NonNull final Context context) {
+        Log.d("AJDB", "3 - startImmediateSync: ");
         Intent intentToSyncImmediately = new Intent(context, CurrenciesSyncIntentService.class);
         context.startService(intentToSyncImmediately);
     }

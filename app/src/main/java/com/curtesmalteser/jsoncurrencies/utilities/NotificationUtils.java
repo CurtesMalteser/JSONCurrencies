@@ -14,6 +14,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.activity.MainActivity;
@@ -106,6 +107,7 @@ public class NotificationUtils {
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             notificationManager.notify(CURRENCIES_NOTIFICATION_ID, notificationBuilder.build());
+            Log.d("AJDB", "1 - notifyUserOfNewRates: ");
 
             // TODO: 10/01/2018 implement prefernces
             // SunshinePreferences.saveLastNotificationTime(context, System.currentTimeMillis());

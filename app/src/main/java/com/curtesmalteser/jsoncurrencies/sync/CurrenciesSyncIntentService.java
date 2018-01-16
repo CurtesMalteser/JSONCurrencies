@@ -20,6 +20,7 @@ public class CurrenciesSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        Log.d("AJDB", "3 - onHandleIntent: ");
         String action = intent.getAction();
         ReminderTasks.executeTask(this, action);
     }

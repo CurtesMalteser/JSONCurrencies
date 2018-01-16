@@ -24,6 +24,7 @@ public class CurrenciesFirebaseJobService extends JobService {
         mCurrenciesLoader = new AsyncTaskLoader(context) {
             @Override
             public Object loadInBackground() {
+                Log.d("AJDB", "4 - loadInBackground: ");
                 CurrenciesSyncTask.syncCurriesData(context);
                 CurrenciesSyncUtils.initialize(context);
                 jobFinished(jobParameters, false);

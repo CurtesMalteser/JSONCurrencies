@@ -70,7 +70,7 @@ public class FixerJsonUtils {
 
         JSONObject ratesObject = baseObject.getJSONObject(FJU_RATES);
 
-         CurrenciesModel currenciesModel = new CurrenciesModel(
+        CurrenciesModel currenciesModel = new CurrenciesModel(
                 getString(FJU_BASE, baseObject),
                 getString(FJU_CURRENCY_DATE, baseObject),
                 currency,

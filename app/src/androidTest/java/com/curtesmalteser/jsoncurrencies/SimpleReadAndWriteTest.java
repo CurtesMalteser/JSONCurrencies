@@ -1,6 +1,8 @@
 package com.curtesmalteser.jsoncurrencies;
 
 import android.arch.persistence.room.Room;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -33,12 +36,19 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class SimpleReadAndWriteTest {
     private CurrenciesDao mCurDao;
     private CurrenciesDatabase mDb;
+    private static final String TAG = "AndroidJUnit4";
+
+    ArrayList<CurrenciesModel> cm = new ArrayList<>();
 
     @Before
     public void createDb() {
         Context context = InstrumentationRegistry.getTargetContext();
         mDb = Room.inMemoryDatabaseBuilder(context, CurrenciesDatabase.class).build();
         mCurDao = mDb.currenciesDao();
+
+        cm.add(new CurrenciesModel(0, "EUR", "15-12-2017", "CHF", 1.1669));
+        cm.add(new CurrenciesModel(1, "EUR", "15-12-2017", "USD", 1.1806));
+        cm.add(new CurrenciesModel(2, "EUR", "15-12-2017", "AUD", 1.5382));
     }
 
     @After
@@ -46,20 +56,53 @@ public class SimpleReadAndWriteTest {
         mDb.close();
     }
 
-   /* @Test
+   /*@Test
     public void writeCurrencyAndReadList() throws Exception {
-
-        ArrayList<CurrenciesModel> cm = new ArrayList<>();
-
-        cm.add(new CurrenciesModel(0, "EUR","15-12-2017", "CHF", 1.1669));
-        cm.add(new CurrenciesModel(1, "EUR","15-12-2017", "USD", 1.1806));
-        cm.add(new CurrenciesModel(2, "EUR","15-12-2017", "AUD", 1.5382));
 
         mCurDao.addCurrencies(cm);
         CurrenciesModel byCurrency = mCurDao.selectSingleCurrency("USD");
         assertThat(byCurrency.getCurrency(), equalTo(cm.get(1).getCurrency()));
 
     }*/
+
+    @Test
+    public void testBulkInsert() {
+
+        Context context = InstrumentationRegistry.getTargetContext();
+
+        ContentValues[] currenciesContentValues = new ContentValues[cm.size()];
+
+        for (int i = 0; i < cm.size(); i++) {
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put( CurrenciesModel.COLUMN_ID, cm.get(i).getId());
+            contentValues.put( CurrenciesModel.COLUMN_BASE, cm.get(i).getBase());
+            contentValues.put( CurrenciesModel.COLUMN_DATE, cm.get(i).getDate());
+            contentValues.put( CurrenciesModel.COLUMN_CURRENCY, cm.get(i).getCurrency());
+            contentValues.put( CurrenciesModel.COLUMN_RATE, cm.get(i).getRate());
+
+            currenciesContentValues[i] = contentValues;
+
+        }
+
+        for(ContentValues contentValues : currenciesContentValues) {
+            Log.d(TAG, "testBulkInsert: " + contentValues.get("selected_currency"));
+        }
+        /* Perform the ContentProvider query */
+        ContentResolver currenciesContentResolver = context.getContentResolver();
+
+        int insertCount = currenciesContentResolver.bulkInsert(
+                CurrenciesContentProvider.URI_CURRENCIES,
+                currenciesContentValues);
+
+
+        Log.d(TAG, "testBulkInsert: " + insertCount);
+        String queryFailed = "Query failed to return a valid Cursor";
+        assertEquals(queryFailed, cm.size(), insertCount);
+
+
+    }
 
     @Test
     public void testQuery() {

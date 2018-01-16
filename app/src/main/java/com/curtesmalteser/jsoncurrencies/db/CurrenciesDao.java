@@ -29,13 +29,13 @@ public interface CurrenciesDao {
     int updateCurrencies(CurrenciesModel... currenciesModel);
 
     @Query("SELECT * FROM " + CurrenciesModel.TABLE_NAME)
-    public LiveData<List<CurrenciesModel>> getAllCurrencies();
+    LiveData<List<CurrenciesModel>> getAllCurrencies();
 
     @Query("SELECT * FROM currencies_table WHERE selected_currency LIKE :selectedCurrency")
-    public CurrenciesModel selectSingleCurrency(String selectedCurrency);
+    CurrenciesModel selectSingleCurrency(String selectedCurrency);
 
     @Delete
-    public void deleteCurrencies(CurrenciesModel... currenciesModel);
+    int deleteCurrencies(CurrenciesModel... currenciesModel);
 
     //***************** Methods to use with ContentProvider *****************//
     // This methods returns a Cursor to use on CurrenciesContentProvider and select all currencies
