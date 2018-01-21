@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/widget">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/widget_toolbar"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_money"
+            android:contentDescription="@string/logo_widget" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_cancel"
+            android:contentDescription="@string/cancel_string" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="32dp"
+            android:gravity="center_vertical"
+            android:text="@string/selected_currency"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title"
+            android:layout_marginLeft="32dp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/widget_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryLight"/>
+
+</LinearLayout>

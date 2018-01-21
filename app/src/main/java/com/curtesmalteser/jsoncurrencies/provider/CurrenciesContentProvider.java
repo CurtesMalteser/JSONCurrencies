@@ -72,6 +72,7 @@ public class CurrenciesContentProvider extends ContentProvider {
             final Cursor cursor;
             if (code == CURRENCIES_TABLE) {
                 cursor = currenciesDao.selectAll();
+                Log.d("AJDB", "query: " + cursor.getCount());
             } else {
                 cursor = currenciesDao.selectById(ContentUris.parseId(uri));
             }

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.curtesmalteser.jsoncurrencies">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,29 +22,43 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ConverterActivity" />
-        <activity android:name=".activity.SettingsActivity"
+        <activity
+            android:name=".activity.SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity"/>
+                android:value=".activity.MainActivity" />
         </activity>
 
         <!-- Register the ContentProvider -->
         <provider
+            android:name=".provider.CurrenciesContentProvider"
             android:authorities="com.curtesmalteser.jsoncurrencies.provider"
-            android:name="com.curtesmalteser.jsoncurrencies.provider.CurrenciesContentProvider"
             android:exported="true"
-            android:permission="com.curtesmalteser.jsoncurrencies.provider.READ"/>
+            android:permission="com.curtesmalteser.jsoncurrencies.provider.READ" />
 
-        <service android:name=".sync.CurrenciesSyncIntentService"
-            android:exported="false"/>
-
+        <service
+            android:name=".sync.CurrenciesSyncIntentService"
+            android:exported="false" />
         <service android:name=".sync.CurrenciesFirebaseJobService">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".widget.JSONCurrenciesAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
+
+        <service android:name=".widget.StockWidgetService"
+        android:permission="android.permission.BIND_REMOTEVIEWS" />
 
     </application>
 

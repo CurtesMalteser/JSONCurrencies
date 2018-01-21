@@ -12,10 +12,15 @@
     <string name="text_to_share">JSONCurrencies is a project developed by António \"Curtes Malteser\" Bastião</string>
     <string name="test">TEST</string>
     <string name="equal_sign">=</string>
-    <string name="one_string">1</string>
+    <string name="number_one_string">1</string>
     <string name="hint">0.00</string>
 
     <!-- Strings for Notifications and Toasts -->
     <string name="main_notification_channel_name">Primary</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="logo_widget">App logo.</string>
+    <string name="cancel_string">Cancel</string>
+    <string name="selected_currency">Selected Currency:</string>
 
 </resources>
