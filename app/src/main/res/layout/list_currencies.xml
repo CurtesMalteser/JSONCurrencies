@@ -6,5 +6,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_currencies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:listitem = "@layout/list_single_currency"/>
 </layout>

@@ -1,10 +1,13 @@
 package com.curtesmalteser.jsoncurrencies.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -14,7 +17,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.curtesmalteser.jsoncurrencies.adapter.CurrenciesAdapter;
 import com.curtesmalteser.jsoncurrencies.databinding.ActivityMainBinding;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDao;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase;
+import com.curtesmalteser.jsoncurrencies.db.CurrenciesViewModel;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
 import com.curtesmalteser.jsoncurrencies.sync.CurrenciesSyncUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.FixerJsonUtils;
@@ -63,11 +66,23 @@ public class MainActivity extends AppCompatActivity implements
     private CurrenciesDatabase mDb;
 
 
+    private CurrenciesViewModel mViewModel;
+
     public static Context appContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Instantiate the ViewModel provider start the observer
+        mViewModel = ViewModelProviders.of(this).get(CurrenciesViewModel.class);
 
         appContext = getApplicationContext();
 
@@ -108,10 +123,19 @@ public class MainActivity extends AppCompatActivity implements
         // COMPLETED - assign the setHasFixedSize(true) because allows optimizations on our UI
         mainBinding.listCurrencies.recyclerviewCurrencies.setHasFixedSize(true);
 
-        // todo data from shared preferences
-        LoaderManager loaderManager = getSupportLoaderManager();
+        // todo data from shared preferences and check the internet connection
+        if (activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting()) {
 
-        loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
+            LoaderManager loaderManager = getSupportLoaderManager();
+
+            loaderManager.initLoader(SEARCH_LOADER_ID, null, this);
+            liveDataObserver();
+
+        } else {
+            liveDataObserver();
+            mainBinding.progressBar.setVisibility(View.INVISIBLE);
+        }
 
         CurrenciesSyncUtils.initialize(this);
 
@@ -119,6 +143,24 @@ public class MainActivity extends AppCompatActivity implements
         mDb = CurrenciesDatabase.getDatabase(this);
         mCurDao = mDb.currenciesDao();
 
+    }
+
+    private void liveDataObserver() {
+        mViewModel.getAllCurrenciesLiveData().observe(MainActivity.this, currenciesModels -> {
+
+            ArrayList<CurrenciesModel> currenciesModelArrayList = (ArrayList<CurrenciesModel>) currenciesModels;
+            if (currenciesModelArrayList.size() != 0) {
+                mCurrenciesAdpater = new CurrenciesAdapter(currenciesModelArrayList,this);
+                // set the Adapter
+                mainBinding.listCurrencies
+                        .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
+
+                mainBinding.localCoin.labelCurrencyDate.setText(currenciesModels.get(0).getDate());
+            } else {
+                Toast.makeText(this, "There's no offline data to be shown.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
 
     private void setData(String base) {
@@ -204,15 +246,7 @@ public class MainActivity extends AppCompatActivity implements
         if ( null == data ) {
             showErrorMessage();
         } else {
-            // COMPLETED - set the data that will be passed to our adapter
-            mCurrenciesAdpater = new CurrenciesAdapter(data,this);
-            // COMPLETED - set the Adapter
-            mainBinding.listCurrencies
-                    .recyclerviewCurrencies.setAdapter(mCurrenciesAdpater);
-
-            mainBinding.localCoin.labelCurrencyDate.setText(data.get(0).getDate());
-
-
+            showSuccessMessage();
         }
         mainBinding.progressBar.setVisibility(View.INVISIBLE);
     }
@@ -223,8 +257,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void showErrorMessage() {
-        // TODO: 01/12/2017 (2) fix the error message to show something usefull
-        Toast.makeText(this, "Error loading data!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Error loading new data!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showSuccessMessage() {
+        Toast.makeText(this, "The DB is updated!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -281,14 +318,14 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_test :
                 Toast.makeText(this, "action_test", Toast.LENGTH_SHORT).show();
                 break;
-                
+
             case R.id.action_settings:
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
 
-                default:
-                    Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
+            default:
+                Toast.makeText(this, "default", Toast.LENGTH_SHORT).show();
 
         }
         return super.onOptionsItemSelected(item);

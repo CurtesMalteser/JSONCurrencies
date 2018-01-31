@@ -91,10 +91,10 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
             super(itemView);
 
             // COMPLETED - Set the views using the itemView.findViewById()
-            mImgFlag = (ImageView) itemView.findViewById(R.id.image_flag);
-            mTvCountry = (TextView)   itemView.findViewById(R.id.tv_country);
-            mTvCoin = (TextView)   itemView.findViewById(R.id.tv_coin);
-            mTvCurrency = (TextView)   itemView.findViewById(R.id.tv_currency);
+            mImgFlag = itemView.findViewById(R.id.image_flag);
+            mTvCountry = itemView.findViewById(R.id.tv_country);
+            mTvCoin = itemView.findViewById(R.id.tv_coin);
+            mTvCurrency = itemView.findViewById(R.id.tv_currency);
 
             itemView.setOnClickListener(this);
         }
