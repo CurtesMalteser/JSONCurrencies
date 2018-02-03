@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
@@ -46,8 +47,12 @@ public class FixerJsonUtils {
          */
         ArrayList<String> currencies = new ArrayList<>();
         for (int y = 0; y <= ratesObject.length(); y++) {
-            if (!getString(FJU_BASE, baseObject).equals(fju_coins[y])) {
-                currencies.add(fju_coins[y]);
+            if (ratesObject.length() >= fju_coins.length) {
+                throw new IndexOutOfBoundsException("IndexOutOfBoundsException: " + ratesObject.length());
+            } else {
+                if (!getString(FJU_BASE, baseObject).equals(fju_coins[y])) {
+                    currencies.add(fju_coins[y]);
+                }
             }
 
         }
