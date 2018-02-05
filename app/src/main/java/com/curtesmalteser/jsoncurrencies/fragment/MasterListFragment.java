@@ -39,8 +39,10 @@ import com.curtesmalteser.jsoncurrencies.db.CurrenciesDao;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDatabase;
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesViewModel;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
+import com.curtesmalteser.jsoncurrencies.model.FlagModel;
 import com.curtesmalteser.jsoncurrencies.sync.CurrenciesSyncUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.FixerJsonUtils;
+import com.curtesmalteser.jsoncurrencies.utilities.FlagUtils;
 import com.curtesmalteser.jsoncurrencies.utilities.NetworkUtils;
 
 import org.json.JSONException;
@@ -112,10 +114,8 @@ public class MasterListFragment extends Fragment implements
         appContext = getActivity().getApplicationContext();
 
 
-        // Use to set the vectorDrawables color
-        mainBinding.localCoin.localCoin.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
-        mainBinding.localCoin.labelCurrentCountyFlag.setText("Portugal");
+        mainBinding.localCoin.labelCurrentCountyFlag.setText("N/A");
 
         mainBinding.localCoin.labelDate.setText("29 / 11 / 2017");
         mainBinding.localCoin.labelCurrencyDate.setText("N/A");
@@ -130,10 +130,13 @@ public class MasterListFragment extends Fragment implements
         mainBinding.localCoin.spinnerSelectCoin.setAdapter(adapter);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("currencies", MODE_PRIVATE);
-        String index = sharedPreferences.getString("base", "EUR");
+        String base = sharedPreferences.getString("base", "EUR");
+
+        setFlagAndSign(base);
 
         String[] array = getResources().getStringArray(R.array.currencies_array);
-        int value = Arrays.asList(array).indexOf(index);
+
+        int value = Arrays.asList(array).indexOf(base);
         mainBinding.localCoin.spinnerSelectCoin.setSelection(value);
 
         mainBinding.localCoin.spinnerSelectCoin.setOnItemSelectedListener(this);
@@ -168,6 +171,17 @@ public class MasterListFragment extends Fragment implements
         mCurDao = mDb.currenciesDao();
 
         return rootView;
+    }
+
+    private void setFlagAndSign(String base) {
+        // TODO: 05/02/2018 declare scope variable
+        FlagModel flagModel = FlagUtils.selectFlag(base);
+
+        // Use to set the vectorDrawables color
+        mainBinding.localCoin.localCoin.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        mainBinding.localCoin.localCoin.setImageResource(flagModel.getSign());
+
+        mainBinding.localCoin.currentCountryFlag.setImageResource(flagModel.getFlag());
     }
 
     private void liveDataObserver() {
@@ -313,6 +327,7 @@ public class MasterListFragment extends Fragment implements
         if(!base.equals(sharedPrefVal)){
             setData(base);
             sharedPreferences(base);
+            setFlagAndSign(base);
         }
     }
 
