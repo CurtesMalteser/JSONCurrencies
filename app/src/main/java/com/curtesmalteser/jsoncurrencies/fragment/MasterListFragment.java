@@ -92,7 +92,7 @@ public class MasterListFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
 
         mainBinding = DataBindingUtil.setContentView(getActivity(), R.layout.activity_main);
@@ -332,7 +332,7 @@ public class MasterListFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
 
     }
 

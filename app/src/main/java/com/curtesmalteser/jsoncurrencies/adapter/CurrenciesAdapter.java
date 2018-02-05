@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.curtesmalteser.jsoncurrencies.R;
 import com.curtesmalteser.jsoncurrencies.model.CurrenciesModel;
+import com.curtesmalteser.jsoncurrencies.model.FlagModel;
+import com.curtesmalteser.jsoncurrencies.utilities.FlagUtils;
 
 import java.util.ArrayList;
 
@@ -82,7 +84,7 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
 
         // COMPLETED - Add the views member varibles
         ImageView mImgFlag;
-        TextView mTvCountry;
+        ImageView mImgSign;
         TextView mTvCoin;
         TextView mTvCurrency;
 
@@ -92,7 +94,7 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
 
             // COMPLETED - Set the views using the itemView.findViewById()
             mImgFlag = itemView.findViewById(R.id.image_flag);
-            mTvCountry = itemView.findViewById(R.id.tv_country);
+            mImgSign = itemView.findViewById(R.id.image_sign);
             mTvCoin = itemView.findViewById(R.id.tv_coin);
             mTvCurrency = itemView.findViewById(R.id.tv_currency);
 
@@ -103,10 +105,11 @@ public class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.Cu
         void bind(int listIndex) {
             
             CurrenciesModel model = mCurrenciesArrayList.get(listIndex);
-            
-            mImgFlag.setImageResource(R.drawable.ic_dollar_sign);
-            // TODO: 03/12/2017 create the country array for mTvCountry 
-            mTvCountry.setText(model.getCurrency());
+
+            FlagModel flagModel = FlagUtils.selectFlag(model.getCurrency());
+
+            mImgFlag.setImageResource(flagModel.getFlag());
+            mImgSign.setImageResource(flagModel.getSign());
             mTvCoin.setText(model.getCurrency());
             mTvCurrency.setText(String.valueOf(model.getRate()));
         }
