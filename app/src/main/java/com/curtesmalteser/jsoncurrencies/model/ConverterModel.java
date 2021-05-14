@@ -1,6 +1,6 @@
 package com.curtesmalteser.jsoncurrencies.model;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 11/12/2017.

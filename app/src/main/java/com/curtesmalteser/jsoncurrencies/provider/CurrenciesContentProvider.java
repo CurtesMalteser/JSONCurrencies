@@ -1,6 +1,6 @@
 package com.curtesmalteser.jsoncurrencies.provider;
 
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.curtesmalteser.jsoncurrencies.db.CurrenciesDao;

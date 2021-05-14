@@ -3,8 +3,7 @@ package com.curtesmalteser.jsoncurrencies.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
+import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +13,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.curtesmalteser.jsoncurrencies.activity.MainActivity.appContext;
 
 /**
  * Created by António "Curtes Malteser" Bastião 29/11/2017. Based on
